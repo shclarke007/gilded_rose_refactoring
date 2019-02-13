@@ -46,12 +46,17 @@ Metrics/LineLength:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
-    - 'lib/**/*'
+    - 'lib/texttest_fixture'
 
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
+    - 'lib/texttest_fixture'
+
+  Lint/UselessAssignment:
+    Exclude: 
+      - 'lib/texttest_fixture'
 
 # Code Style
 # ==========
