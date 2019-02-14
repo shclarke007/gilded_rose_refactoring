@@ -27,7 +27,9 @@ describe GildedRose do
           Item.new('Elixir of the Mongoose', 5, 7)]
         rose = GildedRose.new(items)
         expect { rose.update_quality }.to change { items[0].quality }.by(-1)
+        expect { rose.update_quality }.to change { items[1].sell_in }.by(-1)
         expect { rose.update_quality }.to change { items[0].sell_in }.by(-1)
+        expect { rose.update_quality }.to change { items[1].sell_in }.by(-1)
       end
     end 
 
@@ -36,12 +38,14 @@ describe GildedRose do
         items = [Item.new('Aged Brie', 2, 0)]
         rose = GildedRose.new(items)
         expect { rose.update_quality }.to change { items[0].quality }.by(1)
+        expect { rose.update_quality }.to change { items[0].sell_in }.by(-1)
       end
       it 'quality increases by 2 after sell_in date' do
         items = [Item.new('Aged Brie', -2, 0),
                 Item.new('Backstage passes to a TAFKAL80ETC concert', 15, 20)]
         rose = GildedRose.new(items)
         expect { rose.update_quality }.to change { items[0].quality }.by(2)
+        expect { rose.update_quality }.to change { items[0].sell_in }.by(-1)
       end
     end
     describe "Backstage passes" do
@@ -50,6 +54,7 @@ describe GildedRose do
           items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 15, 20)]
           rose = GildedRose.new(items)
           expect { rose.update_quality }.to change { items[0].quality }.by(1)
+          expect { rose.update_quality }.to change { items[0].sell_in }.by(-1)
         end
       end
       context "sell_in 10 or less days" do
@@ -57,6 +62,7 @@ describe GildedRose do
           items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 9, 20)]
           rose = GildedRose.new(items)
           expect { rose.update_quality }.to change { items[0].quality }.by(2)
+          expect { rose.update_quality }.to change { items[0].sell_in }.by(-1)
         end
       end   
       context "sell_in 5 or less days" do
@@ -64,6 +70,7 @@ describe GildedRose do
           items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 5, 20)]
           rose = GildedRose.new(items)
           expect { rose.update_quality }.to change { items[0].quality }.by(3)
+          expect { rose.update_quality }.to change { items[0].sell_in }.by(-1)
         end
       end  
       context "concert passes" do
@@ -71,6 +78,7 @@ describe GildedRose do
           items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 0, 20)]
           rose = GildedRose.new(items)
           expect { rose.update_quality }.to change { items[0].quality }.to(0)
+          expect { rose.update_quality }.to change { items[0].sell_in }.by(-1)
         end
       end   
     end
