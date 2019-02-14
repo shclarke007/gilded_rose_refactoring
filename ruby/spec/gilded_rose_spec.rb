@@ -9,11 +9,15 @@ describe GildedRose do
       GildedRose.new(items).update_quality()
       expect(items[0].name).to eq "foo"
     end 
-    context "quality = 50" do
-      items = [Item.new('Aged Brie', 2, 50)]
+    context "#quality" do
+      items = [Item.new('Aged Brie', 2, 50), 
+        Item.new('Elixir of the Mongoose', 2, 0)]
       rose = GildedRose.new(items)
       it 'never more than 50' do
         expect { rose.update_quality }.to change { items[0].quality }.by(0)
+      end 
+      it 'quality is never negative' do
+        expect { rose.update_quality }.to change { items[1].quality }.by(0)
       end 
     end
     
