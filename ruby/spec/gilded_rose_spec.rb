@@ -44,7 +44,7 @@ describe GildedRose do
           Item.new('Elixir of the Mongoose', 5, 7)]
         rose = GildedRose.new(items)
         expect { rose.update_quality }.to change { items[0].quality }.by(-1)
-        expect { rose.update_quality }.to change { items[1].sell_in }.by(-1)
+        expect { rose.update_quality }.to change { items[1].quality }.by(-1)
         expect { rose.update_quality }.to change { items[0].sell_in }.by(-1)
         expect { rose.update_quality }.to change { items[1].sell_in }.by(-1)
       end

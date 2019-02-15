@@ -8,41 +8,25 @@ class GildedRose
     @items.each do |item|
       if !is_aged_brie?(item) && !is_backstage?(item)
         if more_than_0?(item)
-          if !is_sulfas?(item)
-            quality_down_by_1(item)
-          end
-        end
+          quality_down_by_1(item) if !is_sulfas?(item) end
       else
         if less_than_50?(item)
           quality_up_by_1(item)
           if is_backstage?(item)
-            if sell_in_10(item) && less_than_50?(item)
-              quality_up_by_1(item)
-            end
-            if sell_in_5(item)
-              less_than_50?(item)
-              quality_up_by_1(item)
+            quality_up_by_1(item) if sell_in_10(item) && less_than_50?(item)
+              less_than_50?(item) && quality_up_by_1(item) if sell_in_5(item) end
             end
           end
-        end
-      end
-
-      if !is_sulfas?(item)
-        item.sell_in -= 1
-      end
+      item.sell_in -= 1 if !is_sulfas?(item)  
       if item.sell_in < 0
         if !is_aged_brie?(item)
           if !is_backstage?(item)
-            if !is_sulfas?(item)
-              more_than_0?(item)
-              quality_down_by_1(item)
-            end
+            quality_down_by_1(item) if !is_sulfas?(item) && more_than_0?(item)
           else
             item.quality -= item.quality
           end
         else
-          less_than_50?(item)
-          quality_up_by_1(item)
+          quality_up_by_1(item) if less_than_50?(item) 
         end
       end
     end
@@ -84,7 +68,7 @@ class GildedRose
     def is_backstage?(item)
       item.name == "Backstage passes to a TAFKAL80ETC concert" ? true : false
     end
-    
+  
     def is_aged_brie?(item)
       item.name == "Aged Brie" ? true : false
     end
