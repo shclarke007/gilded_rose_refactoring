@@ -29,6 +29,7 @@ class GildedRose
           end
         end
       end
+
       if item.name != "Sulfuras, Hand of Ragnaros"
         item.sell_in = item.sell_in - 1
       end
@@ -41,14 +42,23 @@ class GildedRose
               end
             end
           else
-            item.quality = item.quality - item.quality
+            item.quality -= item.quality
+            # item.quality = item.quality - item.quality
           end
         else
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
+          less_than_50?(item)
         end
       end
     end
   end
+
+  private
+    def less_than_50?(items)
+      @items.each do |item|
+        if item.quality < 50
+          item.quality += 1
+        end
+      end
+    end
+      
 end
