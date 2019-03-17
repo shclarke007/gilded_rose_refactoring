@@ -6,46 +6,46 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      if normal_item(item)
-        if more_than_0?(item)
-          quality_down_by_1(item) unless is_sulfuras?(item) && more_than_0?(item)
-        end
-      else
-        if less_than_50?(item)
-          quality_up_by_1(item)
-          update_backstage(item)
-        end
+      item.sell_in -= 1 unless is_sulfuras?(item)
+
+      if normal_item?(item)
+        quality_down_by_1(item)
+      else 
+        quality_up_by_1(item) unless !quality_less_than_50?(item) 
       end
-      item.sell_in -= 1 unless is_sulfuras?(item)  
+
+      if is_backstage?(item)
+        quality_up_by_1(item) unless !sell_in_10(item) && quality_less_than_50?(item) 
+        quality_up_by_1(item) unless !sell_in_5(item) && quality_less_than_50?(item) 
+      end
+    
       if item.sell_in < 0
         if !is_aged_brie?(item)
           if !is_backstage?(item)
-            quality_down_by_1(item) unless is_sulfuras?(item) && more_than_0?(item)
+            quality_down_by_1(item) unless is_sulfuras?(item) && quality_more_than_0?(item)
           else
             item.quality -= item.quality
           end
         else
-          quality_up_by_1(item) unless !less_than_50?(item) 
+          quality_up_by_1(item) unless !quality_less_than_50?(item) 
         end
       end
     end
   end
 
   private
-    def less_than_50?(item)
+    def quality_less_than_50?(item)
       item.quality < 50 ? true : false
     end
 
-    def more_than_0(item)
-      item.quality > 0 ? true : false
-    end
-    
-    def more_than_0?(item)
+    def quality_more_than_0?(item)
       item.quality > 0 ? true : false
     end
 
-    def quality_down_by_1(item)
-      item.quality-=1 
+    def quality_down_by_1(item) 
+      if quality_more_than_0?(item)
+        item.quality-=1 unless is_sulfuras?(item) 
+      end
     end
 
     def quality_up_by_1(item)
@@ -60,7 +60,7 @@ class GildedRose
       item.sell_in < 6 ? true : false 
     end  
 
-    def normal_item(item)
+    def normal_item?(item)
       !is_aged_brie?(item) && !is_backstage?(item) ? true : false
     end
 
@@ -74,13 +74,6 @@ class GildedRose
     
     def is_backstage?(item)
       item.name == "Backstage passes to a TAFKAL80ETC concert" ? true : false
-    end
-
-    def update_backstage(item)
-      if is_backstage?(item)
-        quality_up_by_1(item) unless !sell_in_10(item) && less_than_50?(item) 
-        quality_up_by_1(item) unless !sell_in_5(item) && less_than_50?(item) 
-      end
     end
      
 end
