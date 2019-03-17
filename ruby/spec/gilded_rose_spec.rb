@@ -21,7 +21,7 @@ describe GildedRose do
       end 
     end
     
-    context "Not Aged Brie, Backstage passes or Sulfuras, Hand of Ragnaros" do
+    context "Normal Item" do
       it 'quality decreases when sell_in has passed' do
         items = [Item.new('+5 Dexterity Vest', 10, 20), 
           Item.new('Elixir of the Mongoose', 5, 7)]
@@ -86,7 +86,7 @@ describe GildedRose do
     context "Sulfuras, Hand of Ragnaros" do
       items = [Item.new('Sulfuras, Hand of Ragnaros', 0, 80)]
       rose = GildedRose.new(items)
-      it 'quality never decreses' do
+      it 'quality never decreases' do
         expect { rose.update_quality }.to change { items[0].quality }.by(0)
       end
       it 'never has to be sold' do
