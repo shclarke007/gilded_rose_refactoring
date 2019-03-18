@@ -10,26 +10,20 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      item.sell_in -= 1 unless is_sulfuras?(item)
+      item.sell_in -= 1 unless sulfuras?(item)
+      quality_up_by_1(item) unless !sell_in_10(item) && quality_less_than_50?(item) if backstage?(item)
+      quality_up_by_1(item) unless !sell_in_5(item) && quality_less_than_50?(item) if backstage?(item)
 
       if normal_item?(item)
         quality_down_by_1(item)
       else 
         quality_up_by_1(item) unless !quality_less_than_50?(item) 
       end
-
-      if is_backstage?(item)
-        quality_up_by_1(item) unless !sell_in_10(item) && quality_less_than_50?(item) 
-        quality_up_by_1(item) unless !sell_in_5(item) && quality_less_than_50?(item) 
-      end
     
-      if item.sell_in < 0
-        if !is_aged_brie?(item)
-          if !is_backstage?(item)
-            quality_down_by_1(item) unless is_sulfuras?(item) && quality_more_than_0?(item)
-          else
-            item.quality -= item.quality
-          end
+      if expired(item)
+        unless aged_brie?(item)
+          quality_down_by_1(item) unless backstage?(item) && sulfuras?(item) && quality_more_than_0?(item)
+          item.quality -= item.quality
         else
           quality_up_by_1(item) unless !quality_less_than_50?(item) 
         end
@@ -38,46 +32,48 @@ class GildedRose
   end
 
   private
-    def quality_less_than_50?(item)
-      item.quality < MAX_QUALITY ? true : false
-    end
+  def quality_less_than_50?(item)
+    item.quality < MAX_QUALITY
+  end
 
-    def quality_more_than_0?(item)
-      item.quality > MIN_QUALITY ? true : false
-    end
+  def quality_more_than_0?(item)
+    item.quality > MIN_QUALITY
+  end
 
-    def quality_down_by_1(item) 
-      if quality_more_than_0?(item)
-        item.quality-=1 unless is_sulfuras?(item) 
-      end
-    end
+  def quality_down_by_1(item) 
+    item.quality -= 1 if quality_more_than_0?(item) unless sulfuras?(item) 
+  end
 
-    def quality_up_by_1(item)
-      item.quality+=1
-    end
+  def quality_up_by_1(item)
+    item.quality += 1
+  end
 
-    def sell_in_10(item)
-      item.sell_in < MID_QUALITY ? true : false 
-    end
+  def sell_in_10(item)
+    item.sell_in < MID_QUALITY 
+  end
     
-    def sell_in_5(item)
-      item.sell_in < LOW_QUALITY ? true : false 
-    end  
+  def sell_in_5(item)
+    item.sell_in < LOW_QUALITY 
+  end  
 
-    def normal_item?(item)
-      !is_aged_brie?(item) && !is_backstage?(item) ? true : false
-    end
+  def expired(item)
+    item.sell_in < 0 
+  end
+  
+  def normal_item?(item)
+    !aged_brie?(item) && !backstage?(item) ? true : false
+  end
 
-    def is_aged_brie?(item)
-      item.name == "Aged Brie" ? true : false
-    end
+  def aged_brie?(item)
+    item.name == "Aged Brie"
+  end
     
-    def is_sulfuras?(item)
-      item.name == "Sulfuras, Hand of Ragnaros" ? true : false
-    end
+  def sulfuras?(item)
+    item.name == "Sulfuras, Hand of Ragnaros"
+  end
     
-    def is_backstage?(item)
-      item.name == "Backstage passes to a TAFKAL80ETC concert" ? true : false
-    end
+  def backstage?(item)
+    item.name == "Backstage passes to a TAFKAL80ETC concert"
+  end
      
 end
