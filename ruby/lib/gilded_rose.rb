@@ -1,5 +1,9 @@
 class GildedRose
-
+  MAX_QUALITY = 50
+  MIN_QUALITY = 0
+  MID_QUALITY = 11
+  LOW_QUALITY = 6
+    
   def initialize(items)
     @items = items
   end
@@ -35,11 +39,11 @@ class GildedRose
 
   private
     def quality_less_than_50?(item)
-      item.quality < 50 ? true : false
+      item.quality < MAX_QUALITY ? true : false
     end
 
     def quality_more_than_0?(item)
-      item.quality > 0 ? true : false
+      item.quality > MIN_QUALITY ? true : false
     end
 
     def quality_down_by_1(item) 
@@ -53,11 +57,11 @@ class GildedRose
     end
 
     def sell_in_10(item)
-      item.sell_in < 11 ? true : false 
+      item.sell_in < MID_QUALITY ? true : false 
     end
     
     def sell_in_5(item)
-      item.sell_in < 6 ? true : false 
+      item.sell_in < LOW_QUALITY ? true : false 
     end  
 
     def normal_item?(item)
