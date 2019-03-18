@@ -11,21 +11,22 @@ class GildedRose
   def update_quality
     @items.each do |item|
       item.sell_in -= 1 unless sulfuras?(item)
+      
       quality_up_by_1(item) unless !sell_in_10(item) && quality_less_than_50?(item) if backstage?(item)
       quality_up_by_1(item) unless !sell_in_5(item) && quality_less_than_50?(item) if backstage?(item)
 
-      if normal_item?(item)
+      if normal_items?(item)
         quality_down_by_1(item)
       else 
-        quality_up_by_1(item) unless !quality_less_than_50?(item) 
+        quality_up_by_1(item) if quality_less_than_50?(item) # quality is never more than 50
       end
     
       if expired(item)
         unless aged_brie?(item)
-          quality_down_by_1(item) unless backstage?(item) && sulfuras?(item) && quality_more_than_0?(item)
+          quality_down_by_1(item) unless special_items?(item) && quality_more_than_0?(item)
           item.quality -= item.quality
         else
-          quality_up_by_1(item) unless !quality_less_than_50?(item) 
+          quality_up_by_1(item) if quality_less_than_50?(item) # aged_brie increases 
         end
       end
     end
@@ -60,10 +61,14 @@ class GildedRose
     item.sell_in < 0 
   end
   
-  def normal_item?(item)
-    !aged_brie?(item) && !backstage?(item) ? true : false
+  def normal_items?(item)
+    !aged_brie?(item) && !backstage?(item) 
   end
 
+  def special_items?(item)
+    aged_brie?(item) || backstage?(item) || sulfuras?(item)
+  end
+  
   def aged_brie?(item)
     item.name == "Aged Brie"
   end
